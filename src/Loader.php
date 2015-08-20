@@ -11,7 +11,7 @@
  * @license    See the LICENSE file
  * @version    1.0.0
  */
-namespace CodeCollab\Presentation\Theme;
+namespace CodeCollab\Theme;
 
 /**
  * Interface for file loaders (from themes)
