@@ -1,0 +1,16 @@
+{
+    "name": "child",
+    "parent": "valid",
+    "description": "child example theme for tests",
+    "type": "frontend",
+    "version": "1.0.0",
+    "website": "https://pieterhordijk.com",
+    "authors": [
+        {
+            "name": "Pieter Hordijk",
+            "role": "Lead developer",
+            "website": "https://pieterhordijk.com",
+            "email": "info@pieterhordijk.com"
+        }
+    ]
+}

@@ -1,0 +1,14 @@
+{
+    "name": "valid",
+    "description": "valid example theme for tests",
+    "type": "frontend",
+    "website": "https://pieterhordijk.com",
+    "authors": [
+        {
+            "name": "Pieter Hordijk",
+            "role": "Lead developer",
+            "website": "https://pieterhordijk.com",
+            "email": "info@pieterhordijk.com"
+        }
+    ]
+}
