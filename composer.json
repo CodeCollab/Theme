@@ -1,0 +1,24 @@
+{
+    "name": "codecollab/theme",
+    "description": "Theme package of the CodeCollab project",
+    "version": "0.1.0",
+    "type": "library",
+    "keywords": ["codecollab", "theme"],
+    "homepage": "https://github.com/CodeCollab/Theme",
+    "license": "See the LICENSE file",
+    "authors": [
+        {
+            "name": "Pieter Hordijk",
+            "role": "Lead"
+        }
+    ],
+    "autoload": {
+        "psr-4": {"CodeCollab\\Theme\\": "src/"}
+    },
+    "require": {
+        "php": ">=7.0-dev"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "4.4.*"
+    }
+}
