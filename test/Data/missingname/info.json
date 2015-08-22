@@ -1,6 +1,5 @@
 {
     "description": "valid example theme for tests",
-    "type": "frontend",
     "version": "1.0.0",
     "website": "https://pieterhordijk.com",
     "authors": [

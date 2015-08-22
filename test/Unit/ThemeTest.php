@@ -70,19 +70,6 @@ class ThemeTest extends \PHPUnit_Framework_TestCase
      * @covers CodeCollab\Theme\Theme::getThemeInfo
      * @covers CodeCollab\Theme\Theme::isThemeValid
      */
-    public function testSetThemeThrowsOnInvalidThemeMissingType()
-    {
-        $this->setExpectedException('CodeCollab\Theme\InvalidException');
-
-        new Theme(TEST_DATA_DIR, 'missingtype');
-    }
-
-    /**
-     * @covers CodeCollab\Theme\Theme::__construct
-     * @covers CodeCollab\Theme\Theme::setTheme
-     * @covers CodeCollab\Theme\Theme::getThemeInfo
-     * @covers CodeCollab\Theme\Theme::isThemeValid
-     */
     public function testSetThemeThrowsOnInvalidThemeMissingVersion()
     {
         $this->setExpectedException('CodeCollab\Theme\InvalidException');

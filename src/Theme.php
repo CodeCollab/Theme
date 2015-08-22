@@ -116,7 +116,7 @@ class Theme implements Loader
      */
     private function isThemeValid(string $theme): bool
     {
-        $requiredFields = ['name', 'description', 'type', 'version'];
+        $requiredFields = ['name', 'description', 'version'];
 
         if (!file_exists($this->themePath . '/' . $theme . '/info.json')) {
             return false;

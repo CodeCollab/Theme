@@ -1,7 +1,6 @@
 {
     "name": "valid",
     "description": "valid example theme for tests",
-    "type": "frontend",
     "website": "https://pieterhordijk.com",
     "authors": [
         {
