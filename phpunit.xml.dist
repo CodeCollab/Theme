@@ -25,6 +25,7 @@
         <whitelist>
             <directory suffix=".php">src/</directory>
             <exclude>
+                <file>src/DirectoryTraversalException.php</file>
                 <file>src/InvalidException.php</file>
                 <file>src/NotFoundException.php</file>
             </exclude>
