@@ -3,6 +3,9 @@
 namespace CodeCollabTest\Unit\Theme;
 
 use CodeCollab\Theme\Theme;
+use CodeCollab\Theme\Loader;
+use CodeCollab\Theme\NotFoundException;
+use CodeCollab\Theme\InvalidException;
 
 class ThemeTest extends \PHPUnit_Framework_TestCase
 {
@@ -11,7 +14,7 @@ class ThemeTest extends \PHPUnit_Framework_TestCase
      */
     public function testImplementsCorrectInterface()
     {
-        $this->assertInstanceOf('CodeCollab\Theme\Loader', new Theme(TEST_DATA_DIR, 'valid'));
+        $this->assertInstanceOf(Loader::class, new Theme(TEST_DATA_DIR, 'valid'));
     }
 
     /**
@@ -21,7 +24,8 @@ class ThemeTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetThemeThrowsInvalidPath()
     {
-        $this->setExpectedException('CodeCollab\Theme\NotFoundException');
+        $this->expectException(NotFoundException::class);
+        $this->expectExceptionMessage('The theme cannot be found.');
 
         new Theme(TEST_DATA_DIR, 'notfound');
     }
@@ -29,11 +33,12 @@ class ThemeTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers CodeCollab\Theme\Theme::__construct
      * @covers CodeCollab\Theme\Theme::setTheme
-     * @covers CodeCollab\Theme\Theme::isThemeValid
+     * @covers CodeCollab\Theme\Theme::validateTheme
      */
     public function testSetThemeThrowsOnMissingConfigFile()
     {
-        $this->setExpectedException('CodeCollab\Theme\InvalidException');
+        $this->expectException(InvalidException::class);
+        $this->expectExceptionMessage('The theme (`missingconfig`) is missing the configuration file (`info.json`).');
 
         new Theme(TEST_DATA_DIR, 'missingconfig');
     }
@@ -41,12 +46,26 @@ class ThemeTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers CodeCollab\Theme\Theme::__construct
      * @covers CodeCollab\Theme\Theme::setTheme
+     * @covers CodeCollab\Theme\Theme::validateTheme
+     */
+    public function testSetThemeThrowsOnInvalidConfigFile()
+    {
+        $this->expectException(InvalidException::class);
+        $this->expectExceptionMessage('The theme\'s (`invalidconfig`) configuration file (`info.json`) does not contain valid json or could not be read.');
+
+        new Theme(TEST_DATA_DIR, 'invalidconfig');
+    }
+
+    /**
+     * @covers CodeCollab\Theme\Theme::__construct
+     * @covers CodeCollab\Theme\Theme::setTheme
      * @covers CodeCollab\Theme\Theme::getThemeInfo
-     * @covers CodeCollab\Theme\Theme::isThemeValid
+     * @covers CodeCollab\Theme\Theme::validateTheme
      */
     public function testSetThemeThrowsOnInvalidThemeMissingName()
     {
-        $this->setExpectedException('CodeCollab\Theme\InvalidException');
+        $this->expectException(InvalidException::class);
+        $this->expectExceptionMessage('The theme\'s (`missingname`) configuration file (`info.json`) is missing the required theme name property.');
 
         new Theme(TEST_DATA_DIR, 'missingname');
     }
@@ -55,11 +74,12 @@ class ThemeTest extends \PHPUnit_Framework_TestCase
      * @covers CodeCollab\Theme\Theme::__construct
      * @covers CodeCollab\Theme\Theme::setTheme
      * @covers CodeCollab\Theme\Theme::getThemeInfo
-     * @covers CodeCollab\Theme\Theme::isThemeValid
+     * @covers CodeCollab\Theme\Theme::validateTheme
      */
     public function testSetThemeThrowsOnInvalidThemeMissingDescription()
     {
-        $this->setExpectedException('CodeCollab\Theme\InvalidException');
+        $this->expectException(InvalidException::class);
+        $this->expectExceptionMessage('The theme\'s (`missingdescription`) configuration file (`info.json`) is missing the required theme description property.');
 
         new Theme(TEST_DATA_DIR, 'missingdescription');
     }
@@ -68,11 +88,12 @@ class ThemeTest extends \PHPUnit_Framework_TestCase
      * @covers CodeCollab\Theme\Theme::__construct
      * @covers CodeCollab\Theme\Theme::setTheme
      * @covers CodeCollab\Theme\Theme::getThemeInfo
-     * @covers CodeCollab\Theme\Theme::isThemeValid
+     * @covers CodeCollab\Theme\Theme::validateTheme
      */
     public function testSetThemeThrowsOnInvalidThemeMissingVersion()
     {
-        $this->setExpectedException('CodeCollab\Theme\InvalidException');
+        $this->expectException(InvalidException::class);
+        $this->expectExceptionMessage('The theme\'s (`missingversion`) configuration file (`info.json`) is missing the required theme version property.');
 
         new Theme(TEST_DATA_DIR, 'missingversion');
     }
@@ -82,12 +103,13 @@ class ThemeTest extends \PHPUnit_Framework_TestCase
      * @covers CodeCollab\Theme\Theme::setTheme
      * @covers CodeCollab\Theme\Theme::isPathValid
      * @covers CodeCollab\Theme\Theme::getThemeInfo
-     * @covers CodeCollab\Theme\Theme::isThemeValid
+     * @covers CodeCollab\Theme\Theme::validateTheme
      * @covers CodeCollab\Theme\Theme::load
      */
     public function testLoadThrowsOnThemeFileNotFound()
     {
-        $this->setExpectedException('CodeCollab\Theme\NotFoundException');
+        $this->expectException(NotFoundException::class);
+        $this->expectExceptionMessage('The template file (`/doesntexist.phtml`) could not be found in the theme.');
 
         (new Theme(TEST_DATA_DIR, 'valid'))->load('/doesntexist.phtml');
     }
@@ -97,7 +119,7 @@ class ThemeTest extends \PHPUnit_Framework_TestCase
      * @covers CodeCollab\Theme\Theme::setTheme
      * @covers CodeCollab\Theme\Theme::isPathValid
      * @covers CodeCollab\Theme\Theme::getThemeInfo
-     * @covers CodeCollab\Theme\Theme::isThemeValid
+     * @covers CodeCollab\Theme\Theme::validateTheme
      * @covers CodeCollab\Theme\Theme::load
      */
     public function testLoadNoChild()
@@ -113,7 +135,7 @@ class ThemeTest extends \PHPUnit_Framework_TestCase
      * @covers CodeCollab\Theme\Theme::setTheme
      * @covers CodeCollab\Theme\Theme::isPathValid
      * @covers CodeCollab\Theme\Theme::getThemeInfo
-     * @covers CodeCollab\Theme\Theme::isThemeValid
+     * @covers CodeCollab\Theme\Theme::validateTheme
      * @covers CodeCollab\Theme\Theme::load
      */
     public function testLoadChildFound()
@@ -129,7 +151,7 @@ class ThemeTest extends \PHPUnit_Framework_TestCase
      * @covers CodeCollab\Theme\Theme::setTheme
      * @covers CodeCollab\Theme\Theme::isPathValid
      * @covers CodeCollab\Theme\Theme::getThemeInfo
-     * @covers CodeCollab\Theme\Theme::isThemeValid
+     * @covers CodeCollab\Theme\Theme::validateTheme
      * @covers CodeCollab\Theme\Theme::load
      */
     public function testLoadChildFoundInParent()
@@ -145,12 +167,13 @@ class ThemeTest extends \PHPUnit_Framework_TestCase
      * @covers CodeCollab\Theme\Theme::setTheme
      * @covers CodeCollab\Theme\Theme::isPathValid
      * @covers CodeCollab\Theme\Theme::getThemeInfo
-     * @covers CodeCollab\Theme\Theme::isThemeValid
+     * @covers CodeCollab\Theme\Theme::validateTheme
      * @covers CodeCollab\Theme\Theme::load
      */
     public function testLoadChildFoundNowhere()
     {
-        $this->setExpectedException('CodeCollab\Theme\NotFoundException');
+        $this->expectException(NotFoundException::class);
+        $this->expectExceptionMessage('The template file (`/doesntexist.phtml`) could not be found in the theme.');
 
        (new Theme(TEST_DATA_DIR, 'child'))->load('/doesntexist.phtml');
     }
