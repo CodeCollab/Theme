@@ -22,6 +22,7 @@ namespace CodeCollab\Theme;
  */
 class Theme implements Loader
 {
+    const CONFIG_REQUIRED_FIELDS = ['name', 'description', 'version'];
     /**
      * @var string Base path for themes
      */
@@ -64,9 +65,7 @@ class Theme implements Loader
             throw new NotFoundException('The theme cannot be found.');
         }
 
-        if (!$this->isThemeValid($theme)) {
-            throw new InvalidException('The theme is not valid.');
-        }
+        $this->validateTheme($theme);
 
         $themeInfo = $this->getThemeInfo($theme);
 
@@ -112,29 +111,25 @@ class Theme implements Loader
      *
      * @param string $theme The name of the theme
      *
-     * @return bool True when the layout of the theme directory is valid
+     * @throws \CodeCollab\Theme\InvalidException  When the theme is not valid
      */
-    private function isThemeValid(string $theme): bool
+    private function validateTheme(string $theme)
     {
-        $requiredFields = ['name', 'description', 'version'];
-
         if (!file_exists($this->themePath . '/' . $theme . '/info.json')) {
-            return false;
+            throw new InvalidException('The theme (`' . $theme . '`) is missing the configuration file (`info.json`).');
         }
 
-        $themeInfo = $this->getThemeInfo($theme);
-
-        if ($themeInfo === null) {
-            return false;
+        try {
+            $themeInfo = $this->getThemeInfo($theme);
+        } catch (\Throwable $e) {
+            throw new InvalidException('The theme\'s (`' . $theme . '`) configuration file (`info.json`) does not contain valid json or could not be read.');
         }
 
-        foreach ($requiredFields as $field) {
-            if (!array_key_exists($field, $themeInfo)) {
-                return false;
+        foreach (self::CONFIG_REQUIRED_FIELDS as $requiredField) {
+            if (!array_key_exists($requiredField, $themeInfo)) {
+                throw new InvalidException('The theme\'s (`' . $theme . '`) configuration file (`info.json`) is missing the required theme ' . $requiredField . ' property.');
             }
         }
-
-        return true;
     }
 
     /**
