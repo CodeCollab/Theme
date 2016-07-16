@@ -6,6 +6,7 @@ use CodeCollab\Theme\Theme;
 use CodeCollab\Theme\Loader;
 use CodeCollab\Theme\NotFoundException;
 use CodeCollab\Theme\InvalidException;
+use CodeCollab\Theme\DirectoryTraversalException;
 
 class ThemeTest extends \PHPUnit_Framework_TestCase
 {
@@ -176,5 +177,21 @@ class ThemeTest extends \PHPUnit_Framework_TestCase
         $this->expectExceptionMessage('The template file (`/doesntexist.phtml`) could not be found in the theme.');
 
        (new Theme(TEST_DATA_DIR, 'child'))->load('/doesntexist.phtml');
+    }
+
+    /**
+     * @covers CodeCollab\Theme\Theme::__construct
+     * @covers CodeCollab\Theme\Theme::setTheme
+     * @covers CodeCollab\Theme\Theme::isPathValid
+     * @covers CodeCollab\Theme\Theme::getThemeInfo
+     * @covers CodeCollab\Theme\Theme::validateTheme
+     * @covers CodeCollab\Theme\Theme::load
+     */
+    public function testLoadFileFromChildThrowsOnDirectoryTraversal()
+    {
+        $this->expectException(DirectoryTraversalException::class);
+        $this->expectExceptionMessage('Trying to load a file outside of the theme directory.');
+
+        (new Theme(TEST_DATA_DIR, 'child'))->load('/../../bootstrap.php');
     }
 }

@@ -146,6 +146,11 @@ class Theme implements Loader
     public function load(string $file): string
     {
         if ($this->childTheme && file_exists($this->themePath . '/' . $this->childTheme['name'] . $file)) {
+            $this->preventDirectoryTraversal(
+                $this->themePath . '/' . $this->childTheme['name'],
+                $this->themePath . '/' . $this->childTheme['name'] . $file
+            );
+
             return $this->themePath . '/' . $this->childTheme['name'] . $file;
         }
 
@@ -153,6 +158,29 @@ class Theme implements Loader
             throw new NotFoundException('The template file (`' . $file . '`) could not be found in the theme.');
         }
 
+        $this->preventDirectoryTraversal(
+            $this->themePath . '/' . $this->theme['name'],
+            $this->themePath . '/' . $this->theme['name'] . $file
+        );
+
         return $this->themePath . '/' . $this->theme['name'] . $file;
+    }
+
+    /**
+     * Validates the file path to prevent directory traversal
+     *
+     * @param string $themePath The base path of the theme
+     * @param string $filePath  The file path
+     *
+     * @throws DirectoryTraversalException
+     */
+    private function preventDirectoryTraversal(string $themePath, string $filePath)
+    {
+        $themePath = realpath($themePath);
+        $filePath  = realpath($filePath);
+
+        if ($filePath === false || strpos($filePath, $themePath) !== 0) {
+            throw new DirectoryTraversalException('Trying to load a file outside of the theme directory.');
+        }
     }
 }
