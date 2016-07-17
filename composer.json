@@ -1,7 +1,7 @@
 {
     "name": "codecollab/theme",
     "description": "Theme package of the CodeCollab project",
-    "version": "0.1.0",
+    "version": "1.0.1",
     "type": "library",
     "keywords": ["codecollab", "theme"],
     "homepage": "https://github.com/CodeCollab/Theme",
